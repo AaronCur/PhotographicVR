@@ -1,0 +1,160 @@
+<html>
+
+<head>
+  <link rel="shortcut icon" href="favicon.ico">
+  <meta charset="utf-8">
+  <title>Upload</title>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="upload.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<div class="cardEdit-div">
+
+  <body id="header_body" class="header-body">
+    <h1 id="course_head">Upload to Folder</h1>
+  </body>
+
+  <body onload="setHeader()">
+
+    <div id="nine_holes_div" class="align-center">
+      <h3>Select a position</h3>
+      <select id="9holes">
+    <option value="1" selected>1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+  </select>
+      <br>
+    </div>
+
+    <div id="holes_div" class="align-center">
+      <h3>Select a position</h3>
+      <select id="18holes">
+    <option value="1" selected>1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+    <option value="11">11</option>
+    <option value="12">12</option>
+    <option value="13">13</option>
+    <option value="14">14</option>
+    <option value="15">15</option>
+    <option value="16">16</option>
+    <option value="17">17</option>
+    <option value="18">18</option>
+  </select>
+    </div>
+
+
+    <body id="upload_body" class="upload-body">
+      <div id="upload_div" class="upload-div">
+        <div class="align-center">
+          <h3>Upload an Image/Audio file</h3>
+        </div>
+        <div id="upload_bar_div" hidden>
+          <progress value="0" max="100" id="uploader">0%</progress>
+        </div>
+        <input type="file" value="upload" id="fileButton" onclick="revealProgressDiv()" />
+      </div>
+      <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+      <script>
+        // Initialize Firebase
+        var config = {
+          apiKey: "AIzaSyDtzVExsesnP5CybGbHMtGRa-FN1m92HZU",
+          authDomain: "photographic-vr.firebaseapp.com",
+          databaseURL: "https://photographic-vr.firebaseio.com",
+          projectId: "photographic-vr",
+          storageBucket: "photographic-vr.appspot.com",
+          messagingSenderId: "1078971781219"
+        };
+        firebase.initializeApp(config);
+
+
+        // Get elements
+        var uploader = document.getElementById('uploader');
+        var fileButton = document.getElementById('fileButton');
+
+        //Listen for file selection
+        fileButton.addEventListener('change', function(e) {
+          // get file
+          var file = e.target.files[0];
+
+          console.log(file.type.substring(0, 5));
+
+          var course = getCourse();
+          if (document.getElementById("nine_holes_div").style.display == "none") {
+            var hole = document.getElementById('18holes').value;
+          } else {
+            var hole = document.getElementById('9holes').value;
+          }
+          var fileType = file.type.substring(0, 5);
+          //Create a storage ref
+          var storageRefImage = firebase.storage().ref(course + '/' + "Photo" + hole + '/' + file.name);
+          var storageRefAudio = firebase.storage().ref(course + '/' + "Photo" + hole + '/' + file.name);
+
+          //Create a
+
+          //Upload File
+          if (fileType == 'image') {
+            var task = storageRefImage.put(file);
+
+          } else if (fileType == 'audio') {
+            var task = storageRefAudio.put(file);
+          } else {
+            window.alert("File type not supported");
+            return;
+          }
+
+          //Update progress bar
+          task.on('state_changed',
+            function progress(snapshot) {
+              var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              uploader.value = percentage;
+              console.log(uploader.value);
+            },
+
+            function error(err) {
+              window.alert("You need to Log In to upload a file");
+            },
+
+            function complete() {
+
+              uploader.value = 0;
+              task.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                console.log('File available at', downloadURL);
+                var downloadLink = downloadURL;
+                var postKey = firebase.database().ref('Posts/').push().key;
+                console.log(downloadURL);
+                var updates = {};
+                updates['/' + course + '/' + "Photo" + hole] = downloadLink;
+                firebase.database().ref().update(updates);
+                window.alert("Upload Complete!");
+                hideProgressDiv();
+              });
+            });
+        });
+      </script>
+    </body>
+    <br>
+
+    <div id="back_div" class="back-div">
+      <a href="index.html"><button>Back to Menu</button></a>
+    </div>
+
+</div>
+
+<script src="js/upload.js"></script>
+
+</html>

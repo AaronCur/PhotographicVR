@@ -1,0 +1,91 @@
+<html>
+
+<head>
+  <link rel="shortcut icon" href="favicon.ico">
+  <title>Create Folder</title>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+  <div class="card-div">
+    <div id="reg_header_div">
+      <h1> Create your new folder </h1>
+    </div>
+
+    <div id="reg_name_div">
+      <h3>Enter folder name</h3>
+      <input type="email" placeholder="e.g user@gmail.com" id="user_email_field" />
+    </div>
+
+    <div id="reg_code_div">
+      <h3>Enter a code for the customer to access this folder</h3>
+      <input type="codeNum" placeholder="e.g. 2468" id="course_code_field" />
+    </div>
+    <div id="reg_holes_div">
+      <h3>Enter the number of holes on your Golf Course</h3>
+      <select id="holes">
+        <option value="9">9</option>
+        <option value="18" selected>18</option>
+      </select>
+      <br>
+    </div>
+    <div id="reg_submit_div">
+      <button onclick="reg(); submit(); ">Submit</button></a>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyDtzVExsesnP5CybGbHMtGRa-FN1m92HZU",
+      authDomain: "photographic-vr.firebaseapp.com",
+      databaseURL: "https://photographic-vr.firebaseio.com",
+      projectId: "photographic-vr",
+      storageBucket: "photographic-vr.appspot.com",
+      messagingSenderId: "1078971781219"
+    };
+    firebase.initializeApp(config);
+
+    database = firebase.database();
+    var ref = database.ref();
+
+    ref.on('value', gotData, errData);
+
+    function gotData(data) {
+      var course = data.val();
+      var keys = Object.keys(course);
+      localStorage.setItem('name', JSON.stringify(keys));
+    }
+
+    function errData() {
+
+    }
+
+    function reg() {
+      var userNameVal = document.getElementById("user_email_field").value;
+      var lastHole = document.getElementById('holes').value;
+      var codeVal = document.getElementById("course_code_field").value;
+
+      var data = {};
+
+      var folderData = {
+        name: userNameVal,
+        maxHoles: lastHole,
+        user: JSON.parse(localStorage.getItem('user')),
+        code: codeVal
+      };
+      data[userNameVal] = folderData;
+      firebase.database().ref().update(data);
+    };
+  </script>
+
+  <script src="js/course.js"></script>
+  <script src="js/upload.js"></script>
+
+</body>
+
+</html>
