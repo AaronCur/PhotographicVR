@@ -1,6 +1,5 @@
-function hide()
-{
-  document.getElementById("nine_holes_div").style.display = "none";
+function hide() {
+  document.getElementById("pictures_div").style.display = "none";
   document.getElementById("holes_div").style.display = "none";
   document.getElementById("section_div").style.display = "none";
   document.getElementById("upload_div").style.display = "none";
@@ -8,19 +7,18 @@ function hide()
   localStorage.setItem('selectHoleNumber', JSON.stringify("default"));
 
 }
-function revealProgressDiv()
-{
+
+function revealProgressDiv() {
   document.getElementById("upload_bar_div").style.display = "block";
 }
-function hideProgressDiv()
-{
+
+function hideProgressDiv() {
   document.getElementById('fileButton').value = "";
   document.getElementById("upload_bar_div").style.display = "none";
 }
 
 
-function hideSection()
-{
+function hideSection() {
   document.getElementById("section_div").style.display = "none";
   document.getElementById("upload_div").style.display = "none";
   document.getElementById("upload_bar_div").style.display = "none";
@@ -29,43 +27,38 @@ function hideSection()
   document.getElementById("18holes").value = "default";
 }
 
-function getEmail()
-{
+function getEmail() {
   return JSON.parse(localStorage.getItem('user'));
 }
-function getCourseName()
-{
+
+function getCourseName() {
   return JSON.parse(localStorage.getItem('selectCourseName'));
 }
-function getEmailDataBase()
-{
+
+function getEmailDataBase() {
   return JSON.parse(localStorage.getItem('userDataBase'));
 }
 
 
-function revealArea()
-{
+function revealArea() {
   document.getElementById("section_div").value = "default";
   document.getElementById("section_div").style.display = "block";
 
   //var selected = document.getElementById("selectCourse").value = "block";
 }
-function revealUpload()
-{
+
+function revealUpload() {
   document.getElementById("upload_div").style.display = "block";
 }
-function setHeader()
-{
+
+function setHeader() {
   var holes = JSON.parse(localStorage.getItem('holes'))
 
-  if(holes < 10)
-  {
-    document.getElementById("nine_holes_div").style.display = "block";
+  if (holes < 10) {
+    document.getElementById("pictures_div").style.display = "block";
     document.getElementById("holes_div").style.display = "none";
-  }
-  else
-  {
-    document.getElementById("nine_holes_div").style.display = "none";
+  } else {
+    document.getElementById("pictures_div").style.display = "none";
     document.getElementById("holes_div").style.display = "block";
   }
 
@@ -73,13 +66,11 @@ function setHeader()
   document.getElementById("course_head").innerHTML = "Upload to " + JSON.parse(course);
 }
 
-function setEditHeader(e)
-{
+function setEditHeader(e) {
   document.getElementById("course_head").innerHTML = "Edit " + e;
 }
 
-function storeHoleName()
-{
+function storeHoleName() {
   var selectHoleName = document.getElementById("selectCourse").value;
   localStorage.setItem('selectCourseName', JSON.stringify(selectHoleName));
 }

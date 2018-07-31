@@ -11,6 +11,7 @@
 <body>
 
   <div class="card-div">
+
     <div id="reg_header_div">
       <h1> Create your new folder </h1>
     </div>
@@ -24,14 +25,17 @@
       <h3>Enter a code for the customer to access this folder</h3>
       <input type="codeNum" placeholder="e.g. 2468" id="course_code_field" />
     </div>
+
     <div id="reg_holes_div">
-      <h3>Enter the number of holes on your Golf Course</h3>
+      <h3>Enter the number of photos you wish to display in your scene</h3>
       <select id="holes">
-        <option value="9">9</option>
-        <option value="18" selected>18</option>
+        <option value="5" selected>5 (€5)</option>
+        <option value="10">10 (€10)</option>
+        <option value="15">15 (€15)</option>
       </select>
       <br>
     </div>
+
     <div id="reg_submit_div">
       <button onclick="reg(); submit(); ">Submit</button></a>
     </div>
@@ -55,17 +59,20 @@
 
     ref.on('value', gotData, errData);
 
-    function gotData(data) {
+    function gotData(data)
+    {
       var course = data.val();
       var keys = Object.keys(course);
       localStorage.setItem('name', JSON.stringify(keys));
     }
 
-    function errData() {
+    function errData()
+    {
 
     }
 
-    function reg() {
+    function reg()
+    {
       var userNameVal = document.getElementById("user_email_field").value;
       var lastHole = document.getElementById('holes').value;
       var codeVal = document.getElementById("course_code_field").value;
@@ -81,6 +88,7 @@
       data[userNameVal] = folderData;
       firebase.database().ref().update(data);
     };
+
   </script>
 
   <script src="js/course.js"></script>
