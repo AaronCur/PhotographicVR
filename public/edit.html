@@ -3,7 +3,7 @@
 <head>
   <link rel="shortcut icon" href="favicon.ico">
   <meta charset="utf-8">
-  <title>Edit Course</title>
+  <title>Edit Folder</title>
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="upload.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,32 +20,14 @@
   <body>
     <div id="course_div" class="course_div">
       <h3>Select a Folder</h3>
-      <select id="selectCourse" onchange="getMaxHole(this.value); hideSection()">
+      <select id="selectCourse" onchange="getMaxHole(this.value); getFolderSize(this.value); hideSection(); ">
     <option value="default" disabled selected hidden>Select</option>
     </select>
     </div>
     <div id="holes_div" class="align-center">
       <h3>Select a Photo</h3>
-      <select id="18holes" onchange="revealUpload()">
+      <select id="selectPhoto" onchange="revealUpload()">
       <option value="default" disabled selected hidden>Select</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">9</option>
-    <option value="10">10</option>
-    <option value="11">11</option>
-    <option value="12">12</option>
-    <option value="13">13</option>
-    <option value="14">14</option>
-    <option value="15">15</option>
-    <option value="16">16</option>
-    <option value="17">17</option>
-    <option value="18">18</option>
   </select>
     </div>
 
@@ -76,7 +58,7 @@
     </div>
 
     <body id="upload_body" class="section-div">
-      <div id="upload_div" class="section-div" onclick="storeHoleName(); errorCheckFields();">
+      <div id="upload_div" class="section-div" onclick="storeHoleName();">
         <div class="align-center">
           <h3>Upload an Image/Audio file</h3>
         </div>
@@ -119,7 +101,7 @@
 
         function errorCheckFields() {
 
-          var course = document.getElementById('selectCourse').value;
+          var folderName = document.getElementById('selectCourse').value;
           if (document.getElementById("nine_holes_div").style.display == "none") {
             var hole = document.getElementById('18holes').value;
           } else {
@@ -128,7 +110,7 @@
 
           var section = document.getElementById('section').value;
 
-          if (course === "default") {
+          if (folderName === "default") {
             window.alert("Please select a folder");
             return;
           }
@@ -140,9 +122,9 @@
 
         }
 
-        function getUser(course) {
+        function getUser(folderName) {
           //  console.log(course);
-          var userRef = database.ref().orderByChild("name").equalTo(course).on('value', function(snapshot) {
+          var userRef = database.ref().orderByChild("name").equalTo(folderName).on('value', function(snapshot) {
 
             //console.log(snapshot.val());
 
@@ -156,11 +138,11 @@
           });
         }
 
-        function getMaxHole(course) {
+        function getMaxHole(folderName) {
 
 
-          console.log(course);
-          var maxHoleRef = database.ref().orderByChild("name").equalTo(course).on('value', function(snapshot) {
+          console.log(folderName);
+          var maxHoleRef = database.ref().orderByChild("name").equalTo(folderName).on('value', function(snapshot) {
 
             console.log(snapshot.val());
 
@@ -178,6 +160,22 @@
               }
             });
           });
+        }
+
+        function getFolderSize(folderName) {
+          //  console.log(course);
+          var userRef = database.ref().orderByChild("name").equalTo(folderName).on('value', function(snapshot) {
+
+            //console.log(snapshot.val());
+
+            snapshot.forEach(function(childSnapshot) {
+              var key = childSnapshot.key;
+              var childData = childSnapshot.val();
+              console.log(childData.folderSize);
+              appendPhotoList(childData.folderSize);
+            });
+          });
+
         }
         ref.on('value', gotData, errData);
 
@@ -215,8 +213,29 @@
           if (getCourseName() != 'default') {
             document.getElementById('selectCourse').value = getCourseName();
           }
-
           console.log(keys);
+        }
+
+        function appendPhotoList(size) {
+
+          document.getElementById("selectPhoto").options.length = 0;
+          var select = document.getElementById("selectPhoto"),
+            keys;
+          var option = document.createElement("Option");
+          txt = document.createTextNode("Select");
+          option.appendChild(txt);
+          option.setAttribute("value", "Select");
+          option.setAttribute("disabled", "disabled");
+          option.setAttribute("hidden", true);
+          select.insertBefore(option, select.lastChild);
+          for (var i = 1; i <= size; i++) {
+            var option = document.createElement("Option");
+            txt = document.createTextNode(i);
+            option.appendChild(txt);
+            option.setAttribute("value", i);
+            select.insertBefore(option, select.lastChild);
+          }
+
         }
 
         function errData(err) {
@@ -233,18 +252,14 @@
 
           console.log(file.type.substring(0, 5));
 
-          var course = document.getElementById('selectCourse').value;
-          if (document.getElementById("nine_holes_div").style.display == "none") {
-            var hole = document.getElementById('18holes').value;
-          } else {
-            var hole = document.getElementById('9holes').value;
-          }
+          var folderName = document.getElementById('selectCourse').value;
+          var photoNum = document.getElementById('selectPhoto').value;
 
           var section = document.getElementById('section').value;
           var fileType = file.type.substring(0, 5);
           //Create a storage ref
-          var storageRefImage = firebase.storage().ref(course + '/' + "Photo" + hole + '/' + file.name);
-          var storageRefAudio = firebase.storage().ref(course + '/' + "Photo" + hole + '/' + file.name);
+          var storageRefImage = firebase.storage().ref(folderName + '/' + "Photo" + photoNum + '/' + file.name);
+          var storageRefAudio = firebase.storage().ref(folderName + '/' + "Photo" + photoNum + '/' + file.name);
           //Upload File
           if (fileType == 'image') {
             var task = storageRefImage.put(file);
@@ -276,7 +291,7 @@
                 var postKey = firebase.database().ref('Posts/').push().key;
                 console.log(downloadURL);
                 var updates = {};
-                updates['/' + course + '/' + "Photo" + hole] = downloadLink;
+                updates['/' + folderName + '/' + "Photo" + photoNum] = downloadLink;
                 firebase.database().ref().update(updates);
                 window.alert("Edit Complete!");
                 hideProgressDiv();

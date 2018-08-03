@@ -54,36 +54,32 @@
 
     ref.on('value', gotData, errData);
 
-    function gotData(data)
-    {
+    function gotData(data) {
       var course = data.val();
       var keys = Object.keys(course);
       localStorage.setItem('name', JSON.stringify(keys));
     }
 
-    function errData()
-    {
+    function errData() {
 
     }
 
-    function reg()
-    {
+    function reg() {
       var userNameVal = document.getElementById("user_email_field").value;
-      var lastHole = document.getElementById('holes').value;
+      var maxPics = document.getElementById('num_pictures_field').value;
       var codeVal = document.getElementById("course_code_field").value;
 
       var data = {};
 
       var folderData = {
         name: userNameVal,
-        maxHoles: lastHole,
+        folderSize: maxPics,
         user: JSON.parse(localStorage.getItem('user')),
         code: codeVal
       };
       data[userNameVal] = folderData;
       firebase.database().ref().update(data);
     };
-
   </script>
 
   <script src="js/course.js"></script>

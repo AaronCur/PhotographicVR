@@ -1,5 +1,4 @@
 function hide() {
-  document.getElementById("pictures_div").style.display = "none";
   document.getElementById("holes_div").style.display = "none";
   document.getElementById("section_div").style.display = "none";
   document.getElementById("upload_div").style.display = "none";
@@ -24,11 +23,15 @@ function hideSection() {
   document.getElementById("upload_bar_div").style.display = "none";
   document.getElementById("section").value = "default";
   document.getElementById("9holes").value = "default";
-  document.getElementById("18holes").value = "default";
+  document.getElementById("selectPhoto").value = "default";
 }
 
 function getEmail() {
   return JSON.parse(localStorage.getItem('user'));
+}
+
+function getFolderSizeDatabase() {
+  return JSON.parse(localStorage.getItem('folderSizeDataBase'));
 }
 
 function getCourseName() {

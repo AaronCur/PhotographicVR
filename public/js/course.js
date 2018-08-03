@@ -5,8 +5,8 @@ function submit()
   if(JSON.parse(localStorage.getItem('proceed')) != false)
   {
     var courseName = document.getElementById("user_email_field").value;
-    var numOfHoles = document.getElementById("holes").value;
-    init(courseName, numOfHoles);
+//    var numOfHoles = document.getElementById("holes").value;
+    init(courseName);
     document.location.href = "upload.html";
   }
 }

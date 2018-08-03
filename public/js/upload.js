@@ -30,9 +30,8 @@ function revealUpload() {
   document.getElementById("upload_div").style.display = "block";
 }
 
-function init(course, holes) {
+function init(course) {
   localStorage.setItem('course', JSON.stringify(course));
-  localStorage.setItem('holes', JSON.stringify(holes));
 }
 
 function getCourse() {
