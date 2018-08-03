@@ -65,6 +65,8 @@
     }
 
     function reg() {
+      var folderSize = document.getElementById("num_pictures_field").value;
+      localStorage.setItem('folderSize', JSON.stringify(folderSize));
       var userNameVal = document.getElementById("user_email_field").value;
       var maxPics = document.getElementById('num_pictures_field').value;
       var codeVal = document.getElementById("course_code_field").value;
@@ -79,6 +81,7 @@
       };
       data[userNameVal] = folderData;
       firebase.database().ref().update(data);
+
     };
   </script>
 

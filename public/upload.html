@@ -18,43 +18,10 @@
   <body onload="setHeader()">
 
     <div id="pictures_div" class="align-center">
-      <h3>Select a position</h3>
+      <h3>Select a photo</h3>
       <select id="pictures">
-    <option value="1" selected>1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">9</option>
-  </select>
-      <br>
-    </div>
-
-    <div id="holes_div" class="align-center">
-      <h3>Select a position</h3>
-      <select id="18holes">
-        <option value="1" selected>1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-        <option value="11">11</option>
-        <option value="12">12</option>
-        <option value="13">13</option>
-        <option value="14">14</option>
-        <option value="15">15</option>
-        <option value="16">16</option>
-        <option value="17">17</option>
-        <option value="18">18</option>
-      </select>
+        <option value="default" disabled selected hidden>Select</option>
+    </select>
     </div>
 
 
@@ -84,76 +51,83 @@
         };
         firebase.initializeApp(config);
 
-
+        var size = JSON.parse(localStorage.getItem('folderSize'));
+        appendPhotoList(size);
         // Get elements
         var uploader = document.getElementById('uploader');
         var fileButton = document.getElementById('fileButton');
 
+        function appendPhotoList(size) {
+
+          document.getElementById("pictures").options.length = 0;
+          var select = document.getElementById("pictures"),
+            keys;
+          var option = document.createElement("Option");
+          txt = document.createTextNode("Select");
+          option.appendChild(txt);
+          option.setAttribute("value", "Select");
+          option.setAttribute("disabled", "disabled");
+          option.setAttribute("hidden", true);
+          select.insertBefore(option, select.lastChild);
+          for (var i = 1; i <= size; i++) {
+            var option = document.createElement("Option");
+            txt = document.createTextNode(i);
+            option.appendChild(txt);
+            option.setAttribute("value", i);
+            select.insertBefore(option, select.lastChild);
+          }
+
+        }
+
         //Listen for file selection
-        fileButton.addEventListener('change', function(e)
-        {
+        fileButton.addEventListener('change', function(e) {
           // get file
           var file = e.target.files[0];
 
           console.log(file.type.substring(0, 5));
 
-          var course = getCourse();
-          if (document.getElementById("pictures_div").style.display == "none")
-          {
-            var hole = document.getElementById('18holes').value;
-          }
-          else
-          {
-            var hole = document.getElementById('9holes').value;
-          }
+          var folderName = getCourse();
+          var photoNum = document.getElementById('pictures').value;
           var fileType = file.type.substring(0, 5);
           //Create a storage ref
-          var storageRefImage = firebase.storage().ref(course + '/' + "Photo" + hole + '/' + file.name);
+          var storageRefImage = firebase.storage().ref(folderName + '/' + "Photo" + photoNum + '/' + file.name);
 
           //Upload File
-          if (fileType == 'image')
-          {
+          if (fileType == 'image') {
             var task = storageRefImage.put(file);
-          }
-          else
-          {
+          } else {
             window.alert("File type not supported");
             return;
           }
 
           //Update progress bar
           task.on('state_changed',
-            function progress(snapshot)
-            {
+            function progress(snapshot) {
               var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
               uploader.value = percentage;
               console.log(uploader.value);
             },
 
-            function error(err)
-            {
+            function error(err) {
               window.alert("You need to Log In to upload a file");
             },
 
-            function complete()
-            {
+            function complete() {
 
               uploader.value = 0;
-              task.snapshot.ref.getDownloadURL().then(function(downloadURL)
-              {
+              task.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                 console.log('File available at', downloadURL);
                 var downloadLink = downloadURL;
                 var postKey = firebase.database().ref('Posts/').push().key;
                 console.log(downloadURL);
                 var updates = {};
-                updates['/' + course + '/' + "Photo" + hole] = downloadLink;
+                updates['/' + folderName + '/' + "Photo" + photoNum] = downloadLink;
                 firebase.database().ref().update(updates);
                 window.alert("Upload Complete!");
                 hideProgressDiv();
               });
             });
         });
-
       </script>
     </body>
     <br>
