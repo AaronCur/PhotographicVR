@@ -54,17 +54,20 @@
 
     ref.on('value', gotData, errData);
 
-    function gotData(data) {
+    function gotData(data)
+    {
       var course = data.val();
       var keys = Object.keys(course);
       localStorage.setItem('name', JSON.stringify(keys));
     }
 
-    function errData() {
+    function errData()
+    {
 
     }
 
-    function reg() {
+    function reg()
+    {
       var folderSize = document.getElementById("num_pictures_field").value;
       localStorage.setItem('folderSize', JSON.stringify(folderSize));
       var userNameVal = document.getElementById("user_email_field").value;
@@ -81,8 +84,8 @@
       };
       data[userNameVal] = folderData;
       firebase.database().ref().update(data);
-
     };
+
   </script>
 
   <script src="js/course.js"></script>
