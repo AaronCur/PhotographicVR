@@ -82,7 +82,7 @@
         user: JSON.parse(localStorage.getItem('user')),
         code: codeVal
       };
-      data[userNameVal] = folderData;
+      data[codeVal] = folderData;
       firebase.database().ref().update(data);
     };
 

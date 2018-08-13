@@ -57,7 +57,8 @@
         var uploader = document.getElementById('uploader');
         var fileButton = document.getElementById('fileButton');
 
-        function appendPhotoList(size) {
+        function appendPhotoList(size)
+        {
 
           document.getElementById("pictures").options.length = 0;
           var select = document.getElementById("pictures"),
@@ -69,7 +70,8 @@
           option.setAttribute("disabled", "disabled");
           option.setAttribute("hidden", true);
           select.insertBefore(option, select.lastChild);
-          for (var i = 1; i <= size; i++) {
+          for (var i = 1; i <= size; i++)
+          {
             var option = document.createElement("Option");
             txt = document.createTextNode(i);
             option.appendChild(txt);
@@ -80,42 +82,50 @@
         }
 
         //Listen for file selection
-        fileButton.addEventListener('change', function(e) {
+        fileButton.addEventListener('change', function(e)
+        {
           // get file
           var file = e.target.files[0];
 
           console.log(file.type.substring(0, 5));
 
-          var folderName = getCourse();
+          var folderName = getCode();
           var photoNum = document.getElementById('pictures').value;
           var fileType = file.type.substring(0, 5);
           //Create a storage ref
           var storageRefImage = firebase.storage().ref(folderName + '/' + "Photo" + photoNum + '/' + file.name);
 
           //Upload File
-          if (fileType == 'image') {
+          if (fileType == 'image')
+          {
             var task = storageRefImage.put(file);
-          } else {
+          }
+          else
+          {
             window.alert("File type not supported");
             return;
           }
 
           //Update progress bar
           task.on('state_changed',
-            function progress(snapshot) {
+            function progress(snapshot)
+            {
               var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
               uploader.value = percentage;
               console.log(uploader.value);
             },
 
-            function error(err) {
+            function error(err)
+            {
               window.alert("You need to Log In to upload a file");
             },
 
-            function complete() {
+            function complete()
+            {
 
               uploader.value = 0;
-              task.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+              task.snapshot.ref.getDownloadURL().then(function(downloadURL)
+              {
                 console.log('File available at', downloadURL);
                 var downloadLink = downloadURL;
                 var postKey = firebase.database().ref('Posts/').push().key;
@@ -128,6 +138,7 @@
               });
             });
         });
+
       </script>
     </body>
     <br>

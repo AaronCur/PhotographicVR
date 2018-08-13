@@ -23,7 +23,7 @@ function submit() {
     //    var numOfHoles = document.getElementById("holes").value;
 
 
-    init(courseName);
+    init(courseName, code);
     document.location.href = "upload.html";
   }
 

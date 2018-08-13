@@ -30,12 +30,17 @@ function revealUpload() {
   document.getElementById("upload_div").style.display = "block";
 }
 
-function init(course) {
+function init(course, code) {
   localStorage.setItem('course', JSON.stringify(course));
+  localStorage.setItem('code', JSON.stringify(code));
 }
 
 function getCourse() {
   return JSON.parse(localStorage.getItem('course'));
+}
+
+function getCode() {
+  return JSON.parse(localStorage.getItem('code'));
 }
 
 function setHeader() {
